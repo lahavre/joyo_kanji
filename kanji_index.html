@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Jōyō Kanji Study — Index</title>
+<style>
+  :root{
+    --paper:#F3F2EC; --ink:#1C2230; --ink-soft:#5A6072;
+    --indigo:#243B6B; --line:#DAD7CC; --card:#FFFFFF; --focus:#C6452E;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{background:var(--paper);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    display:flex;flex-direction:column;height:100vh;-webkit-text-size-adjust:100%;}
+  header.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);
+    padding:12px 16px;}
+  h1{font-size:18px;font-weight:700;margin:0;letter-spacing:.01em;}
+  .sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .layout{flex:1 1 auto;display:flex;min-height:0;}
+  nav.side{flex:0 0 232px;overflow-y:auto;border-right:1px solid var(--line);
+    background:#FBFAF6;padding:12px 10px 24px;-webkit-overflow-scrolling:touch;}
+  .grouplabel{font-size:12px;font-weight:700;color:var(--indigo);text-transform:uppercase;
+    letter-spacing:.06em;margin:14px 6px 6px;}
+  .grouplabel:first-child{margin-top:2px;}
+  .grouplabel .jp{font-weight:500;color:var(--ink-soft);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;text-transform:none;letter-spacing:0;}
+  button.set{display:flex;width:100%;align-items:baseline;gap:8px;text-align:left;
+    font-size:14px;font-weight:600;padding:9px 11px;margin:3px 0;border-radius:9px;
+    border:1px solid transparent;background:transparent;color:var(--ink);cursor:pointer;}
+  button.set:hover{background:#EFEDE4;}
+  button.set[aria-current="true"]{background:var(--indigo);color:#fff;border-color:var(--indigo);}
+  button.set .n{margin-left:auto;font-size:11px;font-weight:500;color:var(--ink-soft);}
+  button.set[aria-current="true"] .n{color:#D7DEF0;}
+  button.set:focus-visible{outline:2px solid var(--focus);outline-offset:1px;}
+  .stage{flex:1 1 auto;min-width:0;position:relative;background:var(--paper);}
+  iframe{width:100%;height:100%;border:0;display:block;background:var(--paper);}
+  .openrow{flex:0 0 auto;display:flex;align-items:center;gap:10px;
+    padding:7px 16px;border-bottom:1px solid var(--line);background:var(--paper);}
+  .openrow .now{font-size:13px;font-weight:700;color:var(--indigo);}
+  .openrow a{font-size:12px;color:var(--ink-soft);text-decoration:none;border:1px solid var(--line);
+    border-radius:7px;padding:4px 10px;background:#fff;}
+  .openrow a:hover{border-color:var(--indigo);color:var(--indigo);}
+  .menu-toggle{display:none;}
+  @media (max-width:680px){
+    .layout{flex-direction:column;}
+    nav.side{flex:0 0 auto;width:100%;max-height:42vh;border-right:0;border-bottom:1px solid var(--line);}
+    nav.side[hidden]{display:none;}
+    .menu-toggle{display:inline-block;font-size:13px;font-weight:600;color:var(--indigo);
+      background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:8px;}
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Jōyō Kanji Study</h1>
+  <div class="sub">2,136 kanji · Kyōiku (Grades 1–6) + Secondary School · tap a set to open it</div>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="true">☰ Sets</button>
+</header>
+<div class="layout">
+  <nav class="side" id="side" aria-label="Kanji sets"></nav>
+  <div class="stage">
+    <div class="openrow">
+      <span class="now" id="nowLabel">—</span>
+      <a id="openTab" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+    </div>
+    <div style="position:relative;flex:1 1 auto;height:calc(100% - 39px);">
+      <iframe id="frame" title="Kanji set" src=""></iframe>
+    </div>
+  </div>
+</div>
+<script>
+  const SETS = [
+    {group:"Kyōiku 教育漢字", items:[
+      {t:"Grade 1", jp:"一年生", n:80,  f:"kyoiku_grade1_kanji.html"},
+      {t:"Grade 2", jp:"二年生", n:160, f:"kyoiku_grade2_kanji.html"},
+      {t:"Grade 3", jp:"三年生", n:200, f:"kyoiku_grade3_kanji.html"},
+      {t:"Grade 4", jp:"四年生", n:200, f:"kyoiku_grade4_kanji.html"},
+      {t:"Grade 5", jp:"五年生", n:185, f:"kyoiku_grade5_kanji.html"},
+      {t:"Grade 6", jp:"六年生", n:181, f:"kyoiku_grade6_kanji.html"},
+    ]},
+    {group:"Secondary School 中学・高校", items:[
+      {t:"Kanji 1–100",     jp:"", n:100, f:"secondary_kanji_1-100.html"},
+      {t:"Kanji 101–200",   jp:"", n:100, f:"secondary_kanji_101-200.html"},
+      {t:"Kanji 201–300",   jp:"", n:100, f:"secondary_kanji_201-300.html"},
+      {t:"Kanji 301–400",   jp:"", n:100, f:"secondary_kanji_301-400.html"},
+      {t:"Kanji 401–500",   jp:"", n:100, f:"secondary_kanji_401-500.html"},
+      {t:"Kanji 501–600",   jp:"", n:100, f:"secondary_kanji_501-600.html"},
+      {t:"Kanji 601–700",   jp:"", n:100, f:"secondary_kanji_601-700.html"},
+      {t:"Kanji 701–800",   jp:"", n:100, f:"secondary_kanji_701-800.html"},
+      {t:"Kanji 801–900",   jp:"", n:100, f:"secondary_kanji_801-900.html"},
+      {t:"Kanji 901–1000",  jp:"", n:100, f:"secondary_kanji_901-1000.html"},
+      {t:"Kanji 1001–1130", jp:"", n:130, f:"secondary_kanji_1001-1130.html"},
+    ]},
+  ];
+
+  const BASE = "kanji_set/";  // all 17 set files live in this subfolder
+
+  const side = document.getElementById('side');
+  const frame = document.getElementById('frame');
+  const nowLabel = document.getElementById('nowLabel');
+  const openTab = document.getElementById('openTab');
+  let buttons = [];
+
+  function load(item, btn){
+    frame.src = BASE + item.f;
+    nowLabel.textContent = item.t + (item.jp ? "  " + item.jp : "");
+    openTab.href = BASE + item.f;
+    buttons.forEach(b => b.setAttribute('aria-current', b === btn ? 'true' : 'false'));
+    if (window.matchMedia('(max-width:680px)').matches){
+      side.hidden = true;
+      document.getElementById('menuToggle').setAttribute('aria-expanded','false');
+    }
+  }
+
+  SETS.forEach(g => {
+    const lab = document.createElement('div');
+    lab.className = 'grouplabel';
+    lab.innerHTML = g.group.replace(/(.+?) (\S+)$/, '$1 <span class="jp">$2</span>');
+    side.appendChild(lab);
+    g.items.forEach(item => {
+      const b = document.createElement('button');
+      b.className = 'set';
+      b.innerHTML = '<span>' + item.t + '</span><span class="n">' + item.n + '</span>';
+      b.addEventListener('click', () => load(item, b));
+      side.appendChild(b);
+      buttons.push(b);
+    });
+  });
+
+  const mt = document.getElementById('menuToggle');
+  mt.addEventListener('click', () => {
+    const hidden = side.hidden;
+    side.hidden = !hidden;
+    mt.setAttribute('aria-expanded', String(hidden));
+  });
+
+  // Open the first set by default.
+  load(SETS[0].items[0], buttons[0]);
+</script>
+</body>
+</html>
