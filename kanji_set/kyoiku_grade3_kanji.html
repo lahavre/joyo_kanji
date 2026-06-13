@@ -76,6 +76,15 @@
   .cat .cn{margin-left:auto;font-weight:500;color:var(--ink-soft);font-size:12px;}
   .empty{text-align:center;color:var(--ink-soft);padding:40px 0;font-size:15px;}
   footer{margin-top:22px;font-size:12px;color:var(--ink-soft);text-align:center;line-height:1.7;}
+  .so-wrap{margin-top:11px;}
+  .so-label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
+  .so-row{display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:3px;}
+  .so-cell{flex:0 0 auto;width:44px;height:44px;border:1px solid var(--line);border-radius:7px;background:#FBFAF6;}
+  .so-cell svg{display:block;width:100%;height:100%;}
+  .so-g{stroke:#E4E1D7;stroke-width:1;stroke-dasharray:3 3;}
+  .so-done{fill:none;stroke:#CBC8BE;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;}
+  .so-cur{fill:none;stroke:var(--indigo);stroke-width:4.6;stroke-linecap:round;stroke-linejoin:round;}
+  .so-dot{fill:var(--focus);}
 </style>
 </head>
 <body>
@@ -155,10 +164,31 @@ function searchText(d){
   (d.sp||[]).forEach(x=>t+=x);
   return t.toLowerCase();
 }
+function soStart(d){
+  const m=d.match(/M\s*(-?[\d.]+)[ ,]+(-?[\d.]+)/i);
+  return m?[parseFloat(m[1]),parseFloat(m[2])]:null;
+}
+function strokeOrderHTML(k){
+  const s=STROKES[k];
+  if(!s||!s.p.length) return "";
+  const guide='<line class="so-g" x1="54.5" y1="6" x2="54.5" y2="103"/><line class="so-g" x1="6" y1="54.5" x2="103" y2="54.5"/>';
+  let cells="";
+  for(let i=0;i<s.p.length;i++){
+    let paths="";
+    for(let j=0;j<=i;j++){
+      paths+=`<path class="${j===i?'so-cur':'so-done'}" d="${s.p[j]}"/>`;
+    }
+    const sp=soStart(s.p[i]);
+    const dot=sp?`<circle class="so-dot" cx="${sp[0]}" cy="${sp[1]}" r="6"/>`:"";
+    cells+=`<div class="so-cell"><svg viewBox="0 0 109 109" xmlns="http://www.w3.org/2000/svg">${guide}${paths}${dot}</svg></div>`;
+  }
+  return `<div class="so-wrap"><div class="so-label">Stroke order</div><div class="so-row">${cells}</div></div>`;
+}
 function cardHTML(d){
   return `<article class="card">${glyphSVG(d.k)}<div class="info">`+
     `<div class="meaning">${d.m}</div>`+
     group("音","on",d.on,true)+group("訓","kun",d.kun,true)+group("特","sp",d.sp,false)+
+    strokeOrderHTML(d.k)+
     `</div></article>`;
 }
 function render(){
