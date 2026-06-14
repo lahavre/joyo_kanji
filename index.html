@@ -7,70 +7,98 @@
 <style>
   :root{
     --paper:#F3F2EC; --ink:#1C2230; --ink-soft:#5A6072;
-    --indigo:#243B6B; --line:#DAD7CC; --card:#FFFFFF; --focus:#C6452E;
+    --indigo:#243B6B; --line:#DAD7CC; --focus:#C6452E;
+    --bar:60px;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;height:100%;}
+  html,body{margin:0;padding:0;}
   body{background:var(--paper);color:var(--ink);
     font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-    display:flex;flex-direction:column;height:100vh;-webkit-text-size-adjust:100%;}
-  header.top{flex:0 0 auto;background:var(--paper);border-bottom:1px solid var(--line);
-    padding:12px 16px;}
-  h1{font-size:18px;font-weight:700;margin:0;letter-spacing:.01em;}
-  .sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
-  .layout{flex:1 1 auto;display:flex;min-height:0;}
-  nav.side{flex:0 0 232px;overflow-y:auto;border-right:1px solid var(--line);
-    background:#FBFAF6;padding:12px 10px 24px;-webkit-overflow-scrolling:touch;}
-  .grouplabel{font-size:12px;font-weight:700;color:var(--indigo);text-transform:uppercase;
-    letter-spacing:.06em;margin:14px 6px 6px;}
-  .grouplabel:first-child{margin-top:2px;}
-  .grouplabel .jp{font-weight:500;color:var(--ink-soft);
-    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;text-transform:none;letter-spacing:0;}
-  button.set{display:flex;width:100%;align-items:baseline;gap:8px;text-align:left;
-    font-size:14px;font-weight:600;padding:9px 11px;margin:3px 0;border-radius:9px;
-    border:1px solid transparent;background:transparent;color:var(--ink);cursor:pointer;}
+    height:100vh; height:100dvh; display:flex; flex-direction:column;
+    overflow:hidden; -webkit-text-size-adjust:100%;}
+
+  /* ---------- top bar ---------- */
+  header.top{flex:0 0 auto; display:flex; align-items:center; gap:10px;
+    height:var(--bar); padding:0 12px; background:var(--paper);
+    border-bottom:1px solid var(--line); position:relative; z-index:30;}
+  .ham{flex:0 0 auto; font-size:20px; line-height:1; width:42px; height:40px;
+    border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--indigo);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;}
+  .ham:focus-visible{outline:2px solid var(--focus); outline-offset:1px;}
+  .now{flex:1 1 auto; min-width:0; font-size:15px; font-weight:700; color:var(--indigo);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .open{flex:0 0 auto; font-size:13px; color:var(--ink-soft); text-decoration:none;
+    border:1px solid var(--line); border-radius:8px; padding:7px 11px; background:#fff;}
+  .open:hover{border-color:var(--indigo); color:var(--indigo);}
+
+  /* ---------- body layout ---------- */
+  .layout{flex:1 1 auto; display:flex; min-height:0; position:relative;}
+
+  nav.side{flex:0 0 248px; width:248px; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    background:#FBFAF6; border-right:1px solid var(--line); padding:14px 10px 28px;}
+  .brand{padding:4px 6px 12px; margin-bottom:6px; border-bottom:1px solid var(--line);}
+  .brandtitle{font-size:16px; font-weight:700;}
+  .brandsub{font-size:11px; color:var(--ink-soft); margin-top:3px; line-height:1.4;}
+  .grouplabel{font-size:11px; font-weight:700; color:var(--indigo); text-transform:uppercase;
+    letter-spacing:.06em; margin:14px 6px 6px;}
+  .grouplabel .jp{font-weight:500; color:var(--ink-soft);
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif; text-transform:none; letter-spacing:0;}
+  button.set{display:flex; width:100%; align-items:baseline; gap:8px; text-align:left;
+    font-size:14px; font-weight:600; padding:10px 11px; margin:3px 0; border-radius:9px;
+    border:1px solid transparent; background:transparent; color:var(--ink); cursor:pointer;}
   button.set:hover{background:#EFEDE4;}
-  button.set[aria-current="true"]{background:var(--indigo);color:#fff;border-color:var(--indigo);}
-  button.set .n{margin-left:auto;font-size:11px;font-weight:500;color:var(--ink-soft);}
+  button.set[aria-current="true"]{background:var(--indigo); color:#fff; border-color:var(--indigo);}
+  button.set .n{margin-left:auto; font-size:11px; font-weight:500; color:var(--ink-soft);}
   button.set[aria-current="true"] .n{color:#D7DEF0;}
-  button.set:focus-visible{outline:2px solid var(--focus);outline-offset:1px;}
-  .stage{flex:1 1 auto;min-width:0;position:relative;background:var(--paper);}
-  iframe{width:100%;height:100%;border:0;display:block;background:var(--paper);}
-  .openrow{flex:0 0 auto;display:flex;align-items:center;gap:10px;
-    padding:7px 16px;border-bottom:1px solid var(--line);background:var(--paper);}
-  .openrow .now{font-size:13px;font-weight:700;color:var(--indigo);}
-  .openrow a{font-size:12px;color:var(--ink-soft);text-decoration:none;border:1px solid var(--line);
-    border-radius:7px;padding:4px 10px;background:#fff;}
-  .openrow a:hover{border-color:var(--indigo);color:var(--indigo);}
-  .menu-toggle{display:none;}
-  @media (max-width:680px){
-    .layout{flex-direction:column;}
-    nav.side{flex:0 0 auto;width:100%;max-height:42vh;border-right:0;border-bottom:1px solid var(--line);}
-    nav.side[hidden]{display:none;}
-    .menu-toggle{display:inline-block;font-size:13px;font-weight:600;color:var(--indigo);
-      background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:8px;}
+  button.set:focus-visible{outline:2px solid var(--focus); outline-offset:1px;}
+
+  .stage{flex:1 1 auto; min-width:0; position:relative; background:var(--paper);}
+  .stage iframe{position:absolute; inset:0; width:100%; height:100%; border:0; display:block;
+    background:var(--paper);}
+
+  .backdrop{position:fixed; inset:0; background:rgba(20,24,32,.38); z-index:20;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;}
+
+  /* ---------- wide screens: static sidebar, no drawer ---------- */
+  @media (min-width:761px){
+    .ham{display:none;}
+    nav.side{position:static; transform:none;}
+    .backdrop{display:none;}
+  }
+
+  /* ---------- narrow screens (portrait phones): slide-in drawer ---------- */
+  @media (max-width:760px){
+    nav.side{position:fixed; top:0; left:0; height:100vh; height:100dvh;
+      width:min(84vw,320px); transform:translateX(-100%); transition:transform .22s ease;
+      z-index:40; box-shadow:0 0 30px rgba(0,0,0,.18); border-right:1px solid var(--line);}
+    nav.side.open{transform:translateX(0);}
+    .backdrop.show{opacity:1; pointer-events:auto;}
   }
 </style>
 </head>
 <body>
-<header class="top">
-  <h1>Jōyō Kanji Study</h1>
-  <div class="sub">2,136 kanji · Kyōiku (Grades 1–6) + Secondary School · tap a set to open it</div>
-  <button class="menu-toggle" id="menuToggle" aria-expanded="true">☰ Sets</button>
-</header>
-<div class="layout">
-  <nav class="side" id="side" aria-label="Kanji sets"></nav>
-  <div class="stage">
-    <div class="openrow">
-      <span class="now" id="nowLabel">—</span>
-      <a id="openTab" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
-    </div>
-    <div style="position:relative;flex:1 1 auto;height:calc(100% - 39px);">
+  <header class="top">
+    <button class="ham" id="ham" aria-label="Show set list" aria-expanded="false">☰</button>
+    <span class="now" id="nowLabel">Jōyō Kanji Study</span>
+    <a class="open" id="openTab" href="#" target="_blank" rel="noopener" title="Open current set in a new tab">Open ↗</a>
+  </header>
+
+  <div class="layout">
+    <nav class="side" id="side" aria-label="Kanji sets">
+      <div class="brand">
+        <div class="brandtitle">Jōyō Kanji Study</div>
+        <div class="brandsub">2,136 kanji · Kyōiku (Grades 1–6) + Secondary School</div>
+      </div>
+    </nav>
+    <main class="stage">
       <iframe id="frame" title="Kanji set" src=""></iframe>
-    </div>
+    </main>
   </div>
-</div>
+  <div class="backdrop" id="backdrop"></div>
+
 <script>
+  const BASE = "kanji_set/";  // all 17 set files live in this subfolder
+
   const SETS = [
     {group:"Kyōiku 教育漢字", items:[
       {t:"Grade 1", jp:"一年生", n:80,  f:"kyoiku_grade1_kanji.html"},
@@ -95,23 +123,25 @@
     ]},
   ];
 
-  const BASE = "kanji_set/";  // all 17 set files live in this subfolder
-
   const side = document.getElementById('side');
   const frame = document.getElementById('frame');
   const nowLabel = document.getElementById('nowLabel');
   const openTab = document.getElementById('openTab');
+  const ham = document.getElementById('ham');
+  const backdrop = document.getElementById('backdrop');
   let buttons = [];
+
+  const isNarrow = () => window.matchMedia('(max-width:760px)').matches;
+
+  function openDrawer(){ side.classList.add('open'); backdrop.classList.add('show'); ham.setAttribute('aria-expanded','true'); }
+  function closeDrawer(){ side.classList.remove('open'); backdrop.classList.remove('show'); ham.setAttribute('aria-expanded','false'); }
 
   function load(item, btn){
     frame.src = BASE + item.f;
     nowLabel.textContent = item.t + (item.jp ? "  " + item.jp : "");
     openTab.href = BASE + item.f;
     buttons.forEach(b => b.setAttribute('aria-current', b === btn ? 'true' : 'false'));
-    if (window.matchMedia('(max-width:680px)').matches){
-      side.hidden = true;
-      document.getElementById('menuToggle').setAttribute('aria-expanded','false');
-    }
+    if (isNarrow()) closeDrawer();
   }
 
   SETS.forEach(g => {
@@ -129,12 +159,10 @@
     });
   });
 
-  const mt = document.getElementById('menuToggle');
-  mt.addEventListener('click', () => {
-    const hidden = side.hidden;
-    side.hidden = !hidden;
-    mt.setAttribute('aria-expanded', String(hidden));
-  });
+  ham.addEventListener('click', () => side.classList.contains('open') ? closeDrawer() : openDrawer());
+  backdrop.addEventListener('click', closeDrawer);
+  // Reset drawer state when crossing the breakpoint (e.g. rotating the device).
+  window.matchMedia('(max-width:760px)').addEventListener('change', closeDrawer);
 
   // Open the first set by default.
   load(SETS[0].items[0], buttons[0]);
